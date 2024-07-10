@@ -25,6 +25,7 @@ from sklearn.datasets import make_classification
 from sklearnex.decomposition import PCA
 from sklearnex.dispatcher import get_patch_map
 from sklearnex.svm import SVC, NuSVC
+import sys
 
 ESTIMATORS = set(
     filter(
@@ -39,6 +40,11 @@ X, Y = make_classification(n_samples=40, n_features=4, random_state=42)
 @pytest.mark.parametrize("estimator_class", ESTIMATORS)
 @pytest.mark.parametrize("n_jobs", [None, -1, 1, 2])
 def test_n_jobs_support(caplog, estimator_class, n_jobs):
+
+    print(estimator_class)
+    print(n_jobs)
+    sys.stdout.flush()
+
     def check_estimator_doc(estimator):
         if estimator.__doc__ is not None:
             assert "n_jobs" in estimator.__doc__
@@ -47,6 +53,10 @@ def test_n_jobs_support(caplog, estimator_class, n_jobs):
         for rec in caplog.records:
             if function_name in rec.message and "threads" in rec.message:
                 expected_n_jobs = n_jobs if n_jobs > 0 else cpu_count() + 1 + n_jobs
+                print("Found:")
+                print(rec.message)
+                print(f"Expected n_jobs: {expected_n_jobs} / {n_jobs}")
+                sys.stdout.flush()
                 logging.info(f"{function_name}: setting {expected_n_jobs} threads")
                 if f"{function_name}: setting {expected_n_jobs} threads" in rec.message:
                     return True
