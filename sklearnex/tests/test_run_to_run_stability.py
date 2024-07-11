@@ -52,7 +52,7 @@ from sklearnex.neighbors import (
 from sklearnex.svm import SVC
 
 # to reproduce errors even in CI
-d4p.daalinit(nthreads=100)
+#d4p.daalinit(nthreads=100)
 
 _dataset_dict = {
     "classification": [
