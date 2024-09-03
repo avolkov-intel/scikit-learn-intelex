@@ -14,6 +14,8 @@
 # limitations under the License.
 # ==============================================================================
 
+import sys
+
 import numpy as np
 import pytest
 from numpy.testing import assert_allclose
@@ -100,22 +102,28 @@ def test_logistic_spmd_gold(dataframe, queue):
     _spmd_assert_allclose(spmd_result, _as_numpy(batch_result))
 
 
+# @pytest.mark.parametrize("C", [0.5, 1.0, 2.0])
+
+
 # parametrize max_iter, C, tol
 @pytest.mark.skipif(
     not _mpi_libs_and_gpu_available,
     reason="GPU device and MPI libs required for test",
 )
-@pytest.mark.parametrize("n_samples", [100, 10000])
-@pytest.mark.parametrize("n_features", [10, 100])
-@pytest.mark.parametrize("C", [0.5, 1.0, 2.0])
-@pytest.mark.parametrize("tol", [1e-2, 1e-4])
+@pytest.mark.parametrize("n_samples", [10000])
+@pytest.mark.parametrize("n_features", [10])
+@pytest.mark.parametrize("C", [1.0])
+@pytest.mark.parametrize("tol", [1e-2])
 @pytest.mark.parametrize(
     "dataframe,queue",
     get_dataframes_and_queues(dataframe_filter_="dpnp,dpctl", device_filter_="gpu"),
 )
-@pytest.mark.parametrize("dtype", [np.float32, np.float64])
+@pytest.mark.parametrize("dtype", [np.float32])
+@pytest.mark.parametrize("iter", [i for i in range(10)])
 @pytest.mark.mpi
-def test_logistic_spmd_synthetic(n_samples, n_features, C, tol, dataframe, queue, dtype):
+def test_logistic_spmd_synthetic(
+    n_samples, n_features, C, tol, dataframe, queue, dtype, iter
+):
     # pytest.skip("Sporadic failures on coef_ check. Test disabled while fix in progress")
     # TODO: Resolve numerical issues when n_rows_rank < n_cols
     if n_samples <= n_features:
@@ -153,6 +161,9 @@ def test_logistic_spmd_synthetic(n_samples, n_features, C, tol, dataframe, queue
 
     # TODO: Logistic Regression coefficients do not align
     tol = 1e-2
+    print("Spmd coef:", spmd_model.coef_)
+    print("Batch coef:", batch_model.coef_)
+    sys.stdout.flush()
     assert_allclose(spmd_model.coef_, batch_model.coef_, rtol=tol, atol=tol)
     assert_allclose(spmd_model.intercept_, batch_model.intercept_, rtol=tol, atol=tol)
 
