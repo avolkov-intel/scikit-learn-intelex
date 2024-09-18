@@ -197,8 +197,8 @@ def test_logistic_spmd_synthetic(n_samples, n_features, C, tol, dataframe, queue
     print("Batch loss", batch_loss, batch_loss * y_train.shape[0])
     sys.stdout.flush()
 
-    spmd_reg = 1. / ((spmd_model.coef_ ** 2).sum() * 2)
-    batch_reg = 1. / ((batch_model.coef_ ** 2).sum() * 2)
+    spmd_reg = (spmd_model.coef_ ** 2).sum() / (2 * C)
+    batch_reg = (batch_model.coef_ ** 2).sum() / (2 * C)
 
     print("Rank:", rank, "spmd regul:", spmd_reg, "batch regul:", batch_reg)
 
@@ -212,3 +212,6 @@ def test_logistic_spmd_synthetic(n_samples, n_features, C, tol, dataframe, queue
     batch_result = batch_model.predict(dpt_X_test)
 
     _spmd_assert_allclose(spmd_result, _as_numpy(batch_result))
+
+    # dummy assert
+    assert False
