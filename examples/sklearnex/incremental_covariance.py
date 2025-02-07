@@ -14,9 +14,15 @@
 # limitations under the License.
 # ==============================================================================
 
+import psutil
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM before import: {available_ram:.2f} MB")
 import numpy as np
 
 from sklearnex.covariance import IncrementalEmpiricalCovariance
+
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM after import: {available_ram:.2f} MB")
 
 inccov = IncrementalEmpiricalCovariance(batch_size=3)
 
@@ -40,3 +46,6 @@ result = inccov.fit(X)
 
 print(f"Covariance matrix:\n{result.covariance_}")
 print(f"Means:\n{result.location_}")
+
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM at the end: {available_ram:.2f} MB")

@@ -14,9 +14,14 @@
 # limitations under the License.
 # ==============================================================================
 
+import psutil
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM before import: {available_ram:.2f} MB")
 import numpy as np
 
 from sklearnex.preview.decomposition import IncrementalPCA
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM after import: {available_ram:.2f} MB")
 
 incpca = IncrementalPCA()
 
@@ -47,3 +52,5 @@ transformed_X = incpca.transform(X)
 print(f"Principal components:\n{result.components_}")
 print(f"Explained variance ratio:\n{result.explained_variance_ratio_}")
 print(f"Transformed data:\n{transformed_X}")
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM at the end: {available_ram:.2f} MB")

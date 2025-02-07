@@ -16,12 +16,18 @@
 
 # Calling scikit-learn patch - this would enable acceleration on all
 # enabled algorithms. This is most straight forward way of patching
+import psutil
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM before import: {available_ram:.2f} MB")
 from sklearnex import patch_sklearn
 
 patch_sklearn()
 
 # Function that can validate current state of patching
 from sklearnex import sklearn_is_patched
+
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM after import 1: {available_ram:.2f} MB")
 
 sklearn_is_patched()
 
@@ -39,6 +45,9 @@ patch_sklearn(["DBSCAN"])
 # Remaining non modified scikit-learn codes
 from sklearn.datasets import make_blobs
 from sklearn.preprocessing import StandardScaler
+
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM after import 2: {available_ram:.2f} MB")
 
 centers = [[1, 1], [-1, -1], [1, -1]]
 X, labels_true = make_blobs(
@@ -58,3 +67,5 @@ n_noise_ = list(labels).count(-1)
 
 print("Estimated number of clusters: %d" % n_clusters_)
 print("Estimated number of noise points: %d" % n_noise_)
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM at the end: {available_ram:.2f} MB")

@@ -14,9 +14,14 @@
 # limitations under the License.
 # ==============================================================================
 
+import psutil
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM before import: {available_ram:.2f} MB")
 import numpy as np
 
 from sklearnex.linear_model import IncrementalLinearRegression
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM after import: {available_ram:.2f} MB")
 
 inclin = IncrementalLinearRegression()
 
@@ -43,3 +48,5 @@ result = inclin.fit(X, y)
 
 print(f"Coefs:\n{result.coef_}")
 print(f"Intercept:\n{result.intercept_}")
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM at the end: {available_ram:.2f} MB")

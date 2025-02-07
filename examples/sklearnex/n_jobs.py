@@ -20,6 +20,9 @@
 # sklearnex uses all physical cores by default if `n_jobs` is not set
 
 # Calling scikit-learn patch - this would enable acceleration on all enabled algorithms
+import psutil
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM before import: {available_ram:.2f} MB")
 from sklearnex import patch_sklearn
 
 patch_sklearn()
@@ -28,6 +31,9 @@ patch_sklearn()
 import numpy as np
 from sklearn.datasets import make_blobs
 from sklearn.preprocessing import StandardScaler
+
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM after import: {available_ram:.2f} MB")
 
 centers = [[1, 1], [-1, -1], [1, -1]]
 X, labels_true = make_blobs(
@@ -62,3 +68,5 @@ km_score = davies_bouldin_score(X, labels)
 print("KMeans - Estimated number of iterations: %d" % n_iter_)
 print("KMeans - Estimated inertia: %f" % inertia_)
 print("KMeans - Estimated Davies-Bouldin score: %f" % km_score)
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM at the end: {available_ram:.2f} MB")

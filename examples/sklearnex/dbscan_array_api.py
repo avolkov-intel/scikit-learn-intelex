@@ -14,6 +14,10 @@
 # limitations under the License.
 # ==============================================================================
 
+import psutil
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM before import: {available_ram:.2f} MB")
+
 import array_api_strict
 
 from sklearnex import config_context, patch_sklearn
@@ -21,6 +25,9 @@ from sklearnex import config_context, patch_sklearn
 patch_sklearn()
 
 from sklearn.cluster import DBSCAN
+
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM after import: {available_ram:.2f} MB")
 
 X = array_api_strict.asarray(
     [[1.0, 2.0], [2.0, 2.0], [2.0, 3.0], [8.0, 7.0], [8.0, 8.0], [25.0, 80.0]],
@@ -34,3 +41,6 @@ X = array_api_strict.asarray(
 clustering = DBSCAN(eps=3, min_samples=2).fit(X)
 
 print(f"Fitted labels :\n", clustering.labels_)
+
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM at the end: {available_ram:.2f} MB")

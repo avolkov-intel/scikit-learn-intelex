@@ -17,6 +17,10 @@
 # sklearnex can help you debug your aplications by printing messages on it's invocation
 # to allow you to see if stock of accelerated version was used.
 # By setting sklearnex logger level to "INFO" you would enable this verbose mode
+
+import psutil
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM before import: {available_ram:.2f} MB")
 import logging
 
 logging.getLogger("sklearnex").setLevel(logging.INFO)
@@ -30,6 +34,9 @@ patch_sklearn()
 from sklearn.datasets import make_blobs
 from sklearn.preprocessing import StandardScaler
 
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM after import 1: {available_ram:.2f} MB")
+
 centers = [[1, 1], [-1, -1], [1, -1]]
 X, labels_true = make_blobs(
     n_samples=750, centers=centers, cluster_std=0.4, random_state=0
@@ -39,6 +46,9 @@ X = StandardScaler().fit_transform(X)
 
 from sklearn.cluster import DBSCAN
 from sklearn.metrics import v_measure_score
+
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM after import 2: {available_ram:.2f} MB")
 
 db = DBSCAN(eps=0.3, min_samples=10).fit(X)
 labels = db.labels_
@@ -51,3 +61,5 @@ v_measure = v_measure_score(labels_true, labels)
 print("Estimated number of clusters: %d" % n_clusters_)
 print("Estimated number of noise points: %d" % n_noise_)
 print("Estimated V-measure score: %f" % v_measure)
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM at the end: {available_ram:.2f} MB")

@@ -14,9 +14,16 @@
 # limitations under the License.
 # ==============================================================================
 
+import psutil
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM before import: {available_ram:.2f} MB")
+
 import numpy as np
 
 from sklearnex.basic_statistics import IncrementalBasicStatistics
+
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM after import: {available_ram:.2f} MB")
 
 incbs = IncrementalBasicStatistics(result_options=["mean", "max", "sum"])
 
@@ -43,3 +50,6 @@ result = incbs.fit(X)
 print(f"Mean:\n{result.mean}")
 print(f"Max:\n{result.max}")
 print(f"Sum:\n{result.sum}")
+
+available_ram = psutil.virtual_memory().available / (1024 * 1024)
+print(f"Available RAM at the end: {available_ram:.2f} MB")
