@@ -28,6 +28,8 @@
 #include "oneapi/dal/finalize_compute.hpp"
 #include "oneapi/dal/partial_train.hpp"
 #include "oneapi/dal/finalize_train.hpp"
+#include <chrono>
+#include <iostream>
 
 #define ONEDAL_PARAM_DISPATCH_VALUE(value, value_case, ops, ...) \
     if (value == value_case) {                                   \
@@ -67,7 +69,13 @@ struct compute_ops {
     template <typename Float, typename Method, typename... Args>
     auto operator()(const pybind11::dict& params) {
         auto desc = ops.template operator()<Float, Method, Task, Args...>(params);
-        return dal::compute(policy, desc, input);
+        std::cerr << "Start compute" << std::endl;
+        auto start = std::chrono::high_resolution_clock::now();
+        auto res = dal::compute(policy, desc, input);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cerr << "Compute finished in " << duration.count() << std::endl;
+        return res;
     }
 
     Policy policy;
@@ -93,7 +101,13 @@ struct compute_ops_with_hyperparams {
     template <typename Float, typename Method, typename... Args>
     auto operator()(const pybind11::dict& params) {
         auto desc = ops.template operator()<Float, Method, Task, Args...>(params);
-        return dal::compute(policy, desc, hyperparams, input);
+        std::cerr << "Start compute with HP" << std::endl;
+        auto start = std::chrono::high_resolution_clock::now();
+        auto res = dal::compute(policy, desc, hyperparams, input);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cerr << "Compute with HP finished in " << duration.count() << std::endl;
+        return res;
     }
 
     Policy policy;
@@ -116,7 +130,13 @@ struct train_ops {
     template <typename Float, typename Method, typename... Args>
     auto operator()(const pybind11::dict& params) {
         auto desc = ops.template operator()<Float, Method, Task, Args...>(params);
-        return dal::train(policy, desc, input);
+        std::cerr << "Start train" << std::endl;
+        auto start = std::chrono::high_resolution_clock::now();
+        auto res = dal::train(policy, desc, input);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cerr << "Train finished in " << duration.count() << std::endl;
+        return res;
     }
 
     Policy policy;
@@ -142,7 +162,13 @@ struct train_ops_with_hyperparams {
     template <typename Float, typename Method, typename... Args>
     auto operator()(const pybind11::dict& params) {
         auto desc = ops.template operator()<Float, Method, Task, Args...>(params);
-        return dal::train(policy, desc, hyperparams, input);
+        std::cerr << "Start train with HP" << std::endl;
+        auto start = std::chrono::high_resolution_clock::now();
+        auto res = dal::train(policy, desc, hyperparams, input);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cerr << "Train with HP finished in " << duration.count() << std::endl;
+        return res;
     }
 
     Policy policy;
@@ -165,7 +191,14 @@ struct infer_ops {
     template <typename Float, typename Method, typename... Args>
     auto operator()(const pybind11::dict& params) {
         auto desc = ops.template operator()<Float, Method, Task, Args...>(params);
-        return dal::infer(policy, desc, input);
+
+        std::cerr << "Start infer" << std::endl;
+        auto start = std::chrono::high_resolution_clock::now();
+        auto res = dal::infer(policy, desc, input);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cerr << "Infer finished in " << duration.count() << std::endl;
+        return res;
     }
 
     Policy policy;
@@ -191,7 +224,13 @@ struct infer_ops_with_hyperparams {
     template <typename Float, typename Method, typename... Args>
     auto operator()(const pybind11::dict& params) {
         auto desc = ops.template operator()<Float, Method, Task, Args...>(params);
-        return dal::infer(policy, desc, hyperparams, input);
+        std::cerr << "Start infer with HP" << std::endl;
+        auto start = std::chrono::high_resolution_clock::now();
+        auto res = dal::infer(policy, desc, hyperparams, input);
+        auto end = std::chrono::high_resolution_clock::now();
+        std::chrono::duration<double> duration = end - start;
+        std::cerr << "Infer with HP finished in " << duration.count() << std::endl;
+        return res;
     }
 
     Policy policy;
