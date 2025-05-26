@@ -285,6 +285,7 @@ void init_train_hyperparameters(py::module_& m) {
             .def("set_cpu_small_rows_threshold", &train_hyperparams_t::set_cpu_small_rows_threshold)
             .def("set_cpu_small_rows_max_cols_batched",
                  &train_hyperparams_t::set_cpu_small_rows_max_cols_batched)
+            .def("set_cpu_grain_size", &train_hyperparams_t::set_cpu_grain_size)
 #endif // defined(ONEDAL_VERSION) && ONEDAL_VERSION >= 20250500
             .def("set_gpu_macro_block", &train_hyperparams_t::set_gpu_macro_block)
             .def("get_cpu_macro_block",
@@ -303,6 +304,10 @@ void init_train_hyperparameters(py::module_& m) {
             .def("get_cpu_small_rows_max_cols_batched",
                  [](const train_hyperparams_t& self) {
                      return self.get_cpu_small_rows_max_cols_batched();
+                 })
+            .def("get_cpu_grain_size",
+                 [](const train_hyperparams_t& self) {
+                     return self.get_cpu_grain_size();
                  })
 #endif // defined(ONEDAL_VERSION) && ONEDAL_VERSION >= 20250500
             .def("get_gpu_macro_block", [](const train_hyperparams_t& self) {
